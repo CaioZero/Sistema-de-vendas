@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.Length;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

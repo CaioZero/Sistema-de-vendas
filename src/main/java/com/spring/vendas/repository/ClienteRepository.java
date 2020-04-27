@@ -1,23 +1,17 @@
 package com.spring.vendas.repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-
 import com.spring.vendas.entity.Cliente;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ClienteRepository {
-    
+
     @Autowired
     private EntityManager entityManager;
 
@@ -39,9 +33,13 @@ public class ClienteRepository {
 
     @Transactional
     public void deletar(Cliente cliente){
+        if (!entityManager.contains(cliente)) {
+           cliente = entityManager.merge(cliente);
+        }
         entityManager.remove(cliente);
     }
 
+   
     /**Deletar por id */
     @Transactional
     public void deletar(Integer id){
@@ -49,7 +47,8 @@ public class ClienteRepository {
         deletar(cliente);
     }
 
-    @Transactional(readOnly = true)
+    /**Transactional que recebe o ReadOnly */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<Cliente> buscarPorNome(String nome){
       String jpql = "select c from Cliente c where c.nome like :nome";
 
@@ -63,7 +62,7 @@ public class ClienteRepository {
       return query.getResultList();
     }
 
-    @Transactional(readOnly = true)
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<Cliente> obterTodos(){
         return entityManager
         .createQuery("from Cliente", Cliente.class)
