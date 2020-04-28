@@ -1,9 +1,13 @@
 package com.spring.vendas;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.spring.vendas.entity.Cliente;
+import com.spring.vendas.entity.Pedido;
 import com.spring.vendas.repository.ClienteRepository;
+import com.spring.vendas.repository.PedidoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,37 +34,35 @@ public class VendasApplication {
 	}
 
 	@Bean
-	public CommandLineRunner init (@Autowired ClienteRepository clienteRepository){
+	public CommandLineRunner init (
+		@Autowired ClienteRepository clienteRepository,
+		@Autowired PedidoRepository pedidoRepository){
 		return args->{
-			clienteRepository.salvar(new Cliente("Caio"));
-			clienteRepository.salvar(new Cliente("Sandy"));
-			List<Cliente> todosClientes = clienteRepository.obterTodos();
-			todosClientes.forEach(System.out::println);
+			System.out.println("Salvando os Clientes");
+			Cliente fulano = new Cliente("Caio");
+			clienteRepository.save(fulano);
 
-			todosClientes.forEach(c->{
-				c.setNome(c.getNome()+" atualizado");
-				clienteRepository.atualizar(c);
-			});
+			Pedido p = new Pedido();
+			p.setCliente(fulano);
+			p.setDataPedido(LocalDate.now());
+			p.setTotal(BigDecimal.valueOf(100));
+			pedidoRepository.save(p);
+
+			// Cliente cliente = clienteRepository.findClienteFetchPedidos(fulano.getId());
+			// System.out.println(cliente);
+			// System.out.println(cliente.getPedidos());
+
+			pedidoRepository.findByCliente(fulano).forEach(System.out::println);
+
+			// boolean exist = clienteRepository.existsByNome("Caio");
+			// System.out.println("Existe um cliente com o nome Caio? "+exist);
+
+			// List<Cliente> result = clienteRepository.encontrarPorNomeSql("Caio");
+			// result.forEach(System.out::println);
+
+			// List<Cliente> result = clienteRepository.encontrarPorNome("Caio");
+			// result.forEach(System.out::println);
 			
-			System.out.println("Atualizando clientes");
-			todosClientes = clienteRepository.obterTodos();
-			todosClientes.forEach(System.out::println);
-
-			System.out.println("Buscando clientes");
-            clienteRepository.buscarPorNome("Cli").forEach(System.out::println);
-
-           System.out.println("deletando clientes");
-           clienteRepository.obterTodos().forEach(c -> {
-               clienteRepository.deletar(c);
-           });
-
-			System.out.println("Buscando clientes depois do delete");
-            todosClientes = clienteRepository.obterTodos();
-            if(todosClientes.isEmpty()){
-                System.out.println("Nenhum cliente encontrado.");
-            }else{
-                todosClientes.forEach(System.out::println);
-            }
 
 		};
 	}

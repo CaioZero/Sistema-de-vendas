@@ -1,9 +1,13 @@
 package com.spring.vendas.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -26,6 +30,10 @@ public class Cliente {
 
     @Column(name = "nome", length = 100)
     private String nome;
+
+    /**Um pedido para muitos clientes */
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    private Set<Pedido> pedidos;
 
     public Cliente(Integer id, String nome) {
         this.nome = nome;

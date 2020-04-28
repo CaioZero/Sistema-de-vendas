@@ -1,71 +1,42 @@
 package com.spring.vendas.repository;
+
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import com.spring.vendas.entity.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+                                          /**Entidade e tipo do ID */
+public interface ClienteRepository extends JpaRepository<Cliente,Integer>{
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class ClienteRepository {
-
-    @Autowired
-    private EntityManager entityManager;
-
-    /**A anotacao transactional serve para o EntityManager poder utilizar as funcoes
-     * Esta anotacao eh OBRIGATORIA
+    /**Utilizando um QueryMethod
+     * ele esta executando o seguinte comando sql:
+     * select c from Cliente c where c.nome like :nome
      */
+    List<Cliente> findByNomeLike(String nome);
+    
+     /**Fazendo a mesma coisa que a funcao de cima
+     * so que setando a Query manualmente e colocando um nome de uma funcao do jeito que eu quiser
+     * ISSO AQUI EH EM JPQL
+     */
+    @Query(value = "select c from Cliente c where c.nome like :nome")
+    List<Cliente> encontrarPorNome(@Param("nome") String nome);
+    
+        /**Fazendo a mesma coisa que a funcao de cima
+     * so que setando a Query manualmente e colocando um nome de uma funcao do jeito que eu quiser
+     * ISSO AQUI EH EM SQL
+     */
+    @Query(value = "select * from cliente c where c.nome like '%:nome%'", nativeQuery = true)
+	List<Cliente> encontrarPorNomeSql(@Param("nome") String nome);
 
-    @Transactional
-    public Cliente salvar(Cliente cliente){
-        entityManager.persist(cliente);
-        return cliente;
-    }
+    List<Cliente> findByNomeOrId(String nome, Integer id);
 
-    @Transactional
-    public Cliente atualizar(Cliente cliente){
-        entityManager.merge(cliente);
-        return cliente;
-    }
+    boolean existsByNome(String nome);
 
-    @Transactional
-    public void deletar(Cliente cliente){
-        if (!entityManager.contains(cliente)) {
-           cliente = entityManager.merge(cliente);
-        }
-        entityManager.remove(cliente);
-    }
-
-   
-    /**Deletar por id */
-    @Transactional
-    public void deletar(Integer id){
-        Cliente cliente =  entityManager.find(Cliente.class, id);
-        deletar(cliente);
-    }
-
-    /**Transactional que recebe o ReadOnly */
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public List<Cliente> buscarPorNome(String nome){
-      String jpql = "select c from Cliente c where c.nome like :nome";
-
-      /**O resultado de uma consulta jpql retorna uma query tipada, por isso ha necessidade de utilizar o typedQuery */
-      TypedQuery<Cliente> query =  entityManager.createQuery(jpql, Cliente.class);
-
-      /**Aqui ele esta procurando qualquer coisa que tenha o nome no meio. Por exemplo, se escrever silva, ele vai procurar
-       * todos os silvas que ele achar
-       */
-      query.setParameter("nome","%" + nome + "%");
-      return query.getResultList();
-    }
-
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public List<Cliente> obterTodos(){
-        return entityManager
-        .createQuery("from Cliente", Cliente.class)
-        .getResultList();
-    }
+    /**Buscando o cliente com seus pedidos 
+     * o left join traz os clientes, mesmo tendo ou nao clientes.
+     * Caso fosse so join, ele se retornaria clientes que possuem pedidos
+    */
+    @Query("select c from Cliente c left join fetch c.pedidos p where c.id = :id")
+    Cliente findClienteFetchPedidos(@Param ("id") Integer id);
 }

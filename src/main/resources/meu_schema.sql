@@ -12,7 +12,7 @@ CREATE TABLE produto (
 CREATE TABLE pedido (
     id integer PRIMARY key auto_increment,
     cliente_id INTEGER REFERENCES cliente(id),
-    data_pedidos TIMESTAMP,
+    data_pedido TIMESTAMP,
     total NUMERIC (20,2)
 );
 
