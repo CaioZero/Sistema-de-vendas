@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +33,8 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
 
+    /**Para nao retornar no JSON este campo */
+    @JsonIgnore
     /**Um pedido para muitos clientes */
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private Set<Pedido> pedidos;
