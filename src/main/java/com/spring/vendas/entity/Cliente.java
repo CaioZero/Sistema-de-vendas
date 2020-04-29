@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
@@ -32,6 +31,9 @@ public class Cliente {
 
     @Column(name = "nome", length = 100)
     private String nome;
+
+    @Column(name = "cpf", length = 11)
+    private String cpf;
 
     /**Para nao retornar no JSON este campo */
     @JsonIgnore
