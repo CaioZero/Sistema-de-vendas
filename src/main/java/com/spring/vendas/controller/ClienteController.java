@@ -3,6 +3,7 @@ package com.spring.vendas.controller;
 import com.spring.vendas.entity.Cliente;
 import com.spring.vendas.repository.ClienteRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,8 @@ import java.util.List;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
+    @Autowired
     private ClienteRepository clienteRepository;
-
-    public ClienteController(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
 
     @GetMapping(value ="/{id}")
     /**O response Body serve para retornar um objeto JSON */
@@ -41,7 +39,7 @@ public class ClienteController {
     public Cliente getClienteById(@PathVariable Integer id){
             return clienteRepository
                     .findById(id)
-                    .orElseThrow(()-> 
+                    .orElseThrow(() -> 
                         new ResponseStatusException(HttpStatus.NOT_FOUND,"Cliente nao encontrado"));
     }
 
