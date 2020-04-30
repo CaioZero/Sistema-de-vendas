@@ -2,6 +2,7 @@ package com.spring.vendas.service.implementation;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.spring.vendas.dto.ItemPedidoDTO;
@@ -79,6 +80,11 @@ public class PedidoServiceImp implements PedidoService {
                     itemPedido.setProduto(produto);
                     return itemPedido;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return pedidoRepository.findByIdFetchItens(id);
     }
 
 

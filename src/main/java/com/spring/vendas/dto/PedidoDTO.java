@@ -20,13 +20,11 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class PedidoDTO {
-  /**Id do cliente */
-  private Integer cliente;
-  private BigDecimal total;
-  private List<ItemPedidoDTO> items;
+    private Integer cliente;
+    private BigDecimal total;
+    private List<ItemPedidoDTO> items;
 }
