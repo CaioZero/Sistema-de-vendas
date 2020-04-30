@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import lombok.AllArgsConstructor;
+
 @RestController
-@RequestMapping("api/produtos")
+@AllArgsConstructor
+@RequestMapping("/api/produtos")
 public class ProdutoController {
 
     @Autowired

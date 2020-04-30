@@ -9,13 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+/**@Data equivale ao Getter, Setter, toString e EqualHashCode */
+@Data 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="produto")
-@Getter @Setter @NoArgsConstructor
 public class Produto {
 
     @Id

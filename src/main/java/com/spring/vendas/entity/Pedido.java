@@ -14,13 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+/**@Data equivale ao Getter, Setter, toString e EqualHashCode */
+@Data 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="pedido")
-@Getter @Setter @NoArgsConstructor
 public class Pedido {
     
     @Id
