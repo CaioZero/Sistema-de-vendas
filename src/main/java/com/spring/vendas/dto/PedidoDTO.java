@@ -3,6 +3,9 @@ package com.spring.vendas.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import com.spring.vendas.validation.NotEmptyList;
 
 /*
 {
@@ -24,7 +27,13 @@ import lombok.Data;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoDTO {
-    private Integer cliente;
-    private BigDecimal total;
+	@NotNull(message = "{campo.codigo-cliente.obrigatorio}")
+	private Integer cliente;
+	
+	@NotNull(message = "{campo.total-pedido.obrigatorio}")
+	private BigDecimal total;
+	
+	/**Essa anotacao foi customizada */
+	@NotEmptyList(message = "{campo.items-pedido.obrigatorio}")
     private List<ItemPedidoDTO> items;
 }

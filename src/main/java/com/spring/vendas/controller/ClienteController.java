@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 /**Com a Adicao da Annotation @RestController, nao eh mais necessario 
  * a anotattion @ResponseBody, pois agora eh automatico
  */
@@ -47,7 +49,7 @@ public class ClienteController {
     /**A resposta HTTP de status ok para Post eh a 201 */
     @ResponseStatus(HttpStatus.CREATED)
  //   @ResponseBody
-    public Cliente save(@RequestBody Cliente cliente) {
+    public Cliente save(@RequestBody @Valid Cliente cliente) {
         return clienteRepository.save(cliente);
     }
     
@@ -66,7 +68,7 @@ public class ClienteController {
     @PutMapping(value ="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable Integer id,
-                      @RequestBody Cliente cliente){
+                      @RequestBody @Valid Cliente cliente){
 
        clienteRepository.findById(id)
                     /**Esse map eh para ele criar uma instancia que ira substituir o cliente caso ele exista */

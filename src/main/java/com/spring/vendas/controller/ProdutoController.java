@@ -2,6 +2,8 @@ package com.spring.vendas.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.spring.vendas.entity.Produto;
 import com.spring.vendas.repository.ProdutoRepository;
 
@@ -51,13 +53,13 @@ public class ProdutoController {
 
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Produto save(@RequestBody Produto produto){
+    public Produto save(@RequestBody @Valid Produto produto){
         return produtoRepository.save(produto);
     }
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Integer id, @RequestBody Produto produto){
+    public void update(@PathVariable Integer id, @RequestBody @Valid Produto produto){
         produtoRepository.findById(id)
                          .map(produtoExiste->{
                              produto.setId(produtoExiste.getId());
