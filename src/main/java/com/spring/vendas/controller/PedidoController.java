@@ -5,16 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.spring.vendas.dto.AtualizacaoStatusPedidoDTO;
 import com.spring.vendas.dto.InformacaoItemPedidoDTO;
 import com.spring.vendas.dto.InformacoesPedidoDTO;
 import com.spring.vendas.dto.PedidoDTO;
 import com.spring.vendas.entity.ItemPedido;
 import com.spring.vendas.entity.Pedido;
+import com.spring.vendas.enums.StatusPedido;
 import com.spring.vendas.service.PedidoService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +57,18 @@ public class PedidoController {
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado."));
     }
 
+    /**PAra atualizar somente campos especificos, utiliza-se a requisicao PATCH, pois o PUT atualiza todo o objeto
+     * e, neste caso, so eh necessario atualizar o campo Status
+     */
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id ,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto){
+        String novoStatus = dto.getNovoStatus();
+        service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+}
+    
+
     private InformacoesPedidoDTO converter(Pedido pedido){
         return InformacoesPedidoDTO
                 .builder()
@@ -63,6 +78,10 @@ public class PedidoController {
                 .nomeCliente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
                 .items(converter(pedido.getItens()))
+                /**o .name() eh pq esta pegando um valor de uma classe enum e, assim que pega o valor, o metodo transforma
+                 * o valor em string
+                 */
+                .status(pedido.getStatus().name())
                 .build();
     }
 

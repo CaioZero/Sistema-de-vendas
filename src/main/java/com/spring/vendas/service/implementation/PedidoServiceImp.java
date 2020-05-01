@@ -11,6 +11,8 @@ import com.spring.vendas.entity.Cliente;
 import com.spring.vendas.entity.ItemPedido;
 import com.spring.vendas.entity.Pedido;
 import com.spring.vendas.entity.Produto;
+import com.spring.vendas.enums.StatusPedido;
+import com.spring.vendas.exception.PedidoNaoEncontradoException;
 import com.spring.vendas.exception.RegraDeNegocioException;
 import com.spring.vendas.repository.ClienteRepository;
 import com.spring.vendas.repository.ItemPedidoRepository;
@@ -50,6 +52,7 @@ public class PedidoServiceImp implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.Realizado);
 
         List<ItemPedido> itemPedido =  converterItens(pedido, dto.getItems());
         /**Aqui ssalva um pedido */
@@ -85,6 +88,17 @@ public class PedidoServiceImp implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return pedidoRepository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus( Integer id, StatusPedido statusPedido ) {
+        pedidoRepository
+                .findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return pedidoRepository.save(pedido);
+                }).orElseThrow(() -> new PedidoNaoEncontradoException() );
     }
 
 

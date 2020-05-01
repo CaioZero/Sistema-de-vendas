@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,8 @@ import javax.persistence.Table;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import com.spring.vendas.enums.*;
 
 /**@Data equivale ao Getter, Setter, toString e EqualHashCode */
 @Data 
@@ -42,6 +46,9 @@ public class Pedido {
     /**Tamanho maximo de 20 caracteres com duas casas decimais de precisao */
     @Column(name = "total", precision =  20, scale = 2)
     private BigDecimal total;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens;
