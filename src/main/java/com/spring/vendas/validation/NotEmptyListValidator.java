@@ -9,7 +9,6 @@ public class NotEmptyListValidator implements ConstraintValidator<NotEmptyList, 
 
     @Override
     public boolean isValid(List list, ConstraintValidatorContext context) {
-        // TODO Auto-generated method stub
         return list !=null && !list.isEmpty();
     }
 
