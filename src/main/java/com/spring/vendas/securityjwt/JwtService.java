@@ -1,10 +1,11 @@
-package com.spring.vendas;
+package com.spring.vendas.securityjwt;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import com.spring.vendas.VendasApplication;
 import com.spring.vendas.entity.Usuario;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,15 +18,16 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+
 @Service
 public class JwtService {
-    @Value("${security.jwt.expiration}")
+    @Value("30")
     private String expiration;
 
-    @Value("${security.jwt.signedkey}")
+    @Value("Y2FpbyBhdWd1c3Rv")
     private String signedKey;
 
-    private String gerarToken(Usuario usuario) {
+    public String gerarToken(Usuario usuario) {
         long expString = Long.valueOf(expiration);
         LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
         Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
@@ -57,16 +59,4 @@ public class JwtService {
         return (String) obterClaims(token).getSubject();
     }
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(VendasApplication.class);
-        JwtService jwtService = context.getBean(JwtService.class);
-        Usuario usuario = Usuario.builder().login("caio").build();
-        String token = jwtService.gerarToken(usuario);
-        System.out.println(token);
-
-        boolean isTokenValido =  jwtService.tokenValido(token);
-        System.out.println("O token esta valido?: "+isTokenValido);
-
-        System.out.println(jwtService.obterLoginUsuario(token));
-    }
 }

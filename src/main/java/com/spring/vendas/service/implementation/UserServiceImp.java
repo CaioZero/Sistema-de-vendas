@@ -3,6 +3,7 @@ package com.spring.vendas.service.implementation;
 import javax.transaction.Transactional;
 
 import com.spring.vendas.entity.Usuario;
+import com.spring.vendas.exception.SenhaInvalidaException;
 import com.spring.vendas.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,16 @@ public class UserServiceImp implements UserDetailsService {
     @Transactional
     public Usuario salvar(Usuario usuario){
        return usuarioRepository.save(usuario);
+    }
+    
+    public UserDetails autenticar(Usuario usuario){
+        UserDetails user = loadUserByUsername(usuario.getLogin());
+        /**Comparar a senha digitada com a senha que esta no banco de dados */
+        boolean isValid = encoder.matches(usuario.getSenha(), user.getPassword());
+        if (isValid) {
+            return user;
+        }
+        throw new SenhaInvalidaException();
     }
 
     @Override
