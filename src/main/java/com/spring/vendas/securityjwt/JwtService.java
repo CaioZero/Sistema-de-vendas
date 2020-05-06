@@ -37,8 +37,12 @@ public class JwtService {
     }
 
     /** Claims sao as informacoes de um token */
-    public Claims obterClaims(String token) throws ExpiredJwtException {
-        return Jwts.parser().setSigningKey(signedKey).parseClaimsJws(token).getBody();
+    private Claims obterClaims(String token) throws ExpiredJwtException {
+        return Jwts
+            .parser()
+            .setSigningKey(signedKey)
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     public boolean tokenValido(String token) {
